@@ -13,16 +13,24 @@ const Product = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.name)
     setData({
       ...data,
       [e.target.name]: e.target.value
     })
   }
 
+  const [savedProducts, setSavedProducts] = useState<ProductList[]>([]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newSavedProducts = [...savedProducts, data];
+    setSavedProducts(newSavedProducts)
+    alert('Cartão cadastrado com sucesso!')
+  }
 
   return (
-    <div >  
+    <div >
+      <form onSubmit={handleSubmit}>
     <div className='form-product'>
         <label htmlFor="product">Product</label>
         <input
@@ -70,7 +78,8 @@ const Product = () => {
         />
         </div>
         <div>
-        <button type="submit">SALVAR</button>
+        <button type="submit">SALVAR
+        </button>
         </div>
           <div className='product-screen'>
           <section>
@@ -81,6 +90,20 @@ const Product = () => {
           <p> {data.tags} </p>
           </section>
         </div>
+        <div>
+        <section>
+          {savedProducts.map((product) => (
+            <section key={product.product}>
+              <p>{product.product}</p>
+              <p>{product.image && <img src={product.image} width={250} height={250} alt="Product" />}</p>
+              <p>{product.price}</p>
+              <p>{product.description}</p>
+              <p>{product.tags}</p>
+            </section>
+          ))}
+        </section>
+      </div>
+     </form>  
     </div>
   );
 };
