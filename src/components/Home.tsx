@@ -3,7 +3,7 @@ import './Home.style.css'
 const Home = () => {
     return (
       <header className='header'>
-          <h1>React Crud Apication</h1>
+          <h1>React Crud Aplication</h1>
       </header>
       )
 }
