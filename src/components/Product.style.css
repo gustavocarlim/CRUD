@@ -10,3 +10,9 @@
   justify-content: center;
   align-items:center;
 }
+
+.product-saves {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 100px;
+}
