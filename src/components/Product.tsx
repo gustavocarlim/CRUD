@@ -117,10 +117,9 @@ const Product = () => {
               </section>
                 <button onClick={(event) => {
                   event.preventDefault()
-                  handleDelete(product)
+                  handleDelete(product) 
                 } 
-                  }>Excluir
-                      </button>
+                 }>Excluir </button>
                 <button onClick={(event) => event.preventDefault()}>Editar</button>
             </div>  
           ))}
