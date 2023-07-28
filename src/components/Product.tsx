@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Product.style.css';
 import { ProductList } from './Product.type';
-
+import EditProductPage from './EditProductPage';
 
 const Product = () => {
   const [data, setData ] = useState<ProductList>({
@@ -39,7 +39,15 @@ const Product = () => {
       setSavedProducts(updateSaveProducts);
   }
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleOpenModal = () => {
+    setIsModalOpen (true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div >
@@ -94,6 +102,7 @@ const Product = () => {
         <button type="submit">SALVAR
         </button>
         </div>
+        </form>  
           <div className='product-screen'>
           <section>
           <p> {data.product} </p> 
@@ -102,7 +111,7 @@ const Product = () => {
           <p> {data.description} </p>
           <p> {data.tags} </p>
           </section>
-        </div>
+        </div>        
         <div>
           <h2>Produtos Salvos</h2>
         <section className='product-saves'>
@@ -120,12 +129,13 @@ const Product = () => {
                   handleDelete(product) 
                 } 
                  }>Excluir </button>
-                <button onClick={(event) => event.preventDefault()}>Editar</button>
+                <button onClick={(handleOpenModal)}>Editar</button>
+                <EditProductPage isOpen={isModalOpen} onClose={(handleCloseModal)} />
             </div>  
           ))}
         </section>
       </div>
-     </form>  
+
     </div>
   );
 };
