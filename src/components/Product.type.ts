@@ -1,5 +1,5 @@
 export type ProductList = {
-    id: string,
+    id: number,
     product: string,
     description: string,
     price: string,

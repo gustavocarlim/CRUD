@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Product.style.css';
 import { ProductList } from './Product.type';
 import EditProductPage from './EditProductPage';
@@ -13,8 +13,6 @@ const Product = () => {
     tags: ''
   });
 
-  const [ lastId, setLastId ] = useState (0)
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({
       ...data,
@@ -27,9 +25,11 @@ const Product = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const newSavedProducts = [...savedProducts, {...data, id: lastId + 1}];
-    setLastId (lastId + 1)
+    const newId = savedProducts.length > 0 ? savedProducts[savedProducts.length -1].id + 1 : 0
+
+    const newSavedProducts = [...savedProducts, {...data, id: newId}];
     setSavedProducts(newSavedProducts)
+    localStorage.setItem('list', JSON.stringify(newSavedProducts))
   }
 
   const handleDelete = (productToDelete : ProductList) => {
@@ -37,6 +37,7 @@ const Product = () => {
       (product) => product.id !== productToDelete.id 
       );
       setSavedProducts(updateSaveProducts);
+      localStorage.setItem('list', JSON.stringify(updateSaveProducts))
   }
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,6 +49,21 @@ const Product = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const [selectedProduct, setSelectedProduct] = useState<ProductList>(data);
+  
+  const handleEdit = (product: ProductList) => {
+    setSelectedProduct(product)
+    handleOpenModal();
+  };
+
+  useEffect(()=>{
+    const savedLocalStorage = localStorage.getItem('list')
+    if (savedLocalStorage) {
+      const jsonParse = JSON.parse(savedLocalStorage) as ProductList[]
+      setSavedProducts(jsonParse)
+    }
+  }, [])  
 
   return (
     <div >
@@ -102,7 +118,7 @@ const Product = () => {
         <button type="submit">SALVAR
         </button>
         </div>
-        </form>  
+             </form>  
           <div className='product-screen'>
           <section>
           <p> {data.product} </p> 
@@ -111,7 +127,8 @@ const Product = () => {
           <p> {data.description} </p>
           <p> {data.tags} </p>
           </section>
-        </div>        
+        </div>
+        
         <div>
           <h2>Produtos Salvos</h2>
         <section className='product-saves'>
@@ -129,8 +146,15 @@ const Product = () => {
                   handleDelete(product) 
                 } 
                  }>Excluir </button>
-                <button onClick={(handleOpenModal)}>Editar</button>
-                <EditProductPage isOpen={isModalOpen} onClose={(handleCloseModal)} />
+                <button onClick={() => {
+                  handleEdit(product)
+                }}>Editar</button>
+                <EditProductPage 
+                isOpen={isModalOpen} 
+                onClose={(handleCloseModal)} 
+                product={selectedProduct}
+                originalList={savedProducts}
+                setProductList={setSavedProducts} />
             </div>  
           ))}
         </section>
